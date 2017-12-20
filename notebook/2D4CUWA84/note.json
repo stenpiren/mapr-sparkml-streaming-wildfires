@@ -39,7 +39,8 @@
     {
       "title": "Download Raw Data ",
       "text": "%sh\nrm -rf /mapr/my.cluster.com/user/mapr/data/new/fires\nmkdir -p /mapr/my.cluster.com/user/mapr/data/new/fires\ncd /mapr/my.cluster.com/user/mapr/data/new/fires\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2016_365_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2015_365_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2014_365_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2013_365_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2012_366_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2011_365_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2010_365_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2009_365_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2008_005_01_conus_shp.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2007_005_01_conus_shp.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2006_005_01_conus_shp.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2005_005_01_conus_shp.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2004_005_01_conus_shp.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2003_005_01_conus_shp.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2002_005_01_conus_shp.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2001_005_01_conus_shp.zip\nfind modis*.zip | xargs -I {} unzip {} modis*.dbf\nfind mcd*.zip | xargs -I {} unzip {} mcd*.dbf",
-      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "user": "anonymous",
+      "dateUpdated": "Dec 20, 2017 7:35:11 PM",
       "config": {
         "enabled": true,
         "title": true,
@@ -62,7 +63,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "Archive:  modis_fire_2009_365_conus_shapefile.zip\n  inflating: modis_fire_2009_365_conus.dbf  \nArchive:  modis_fire_2010_365_conus_shapefile.zip\n  inflating: modis_fire_2010_365_conus.dbf  \nArchive:  modis_fire_2011_365_conus_shapefile.zip\n  inflating: modis_fire_2011_365_conus.dbf  \nArchive:  modis_fire_2012_366_conus_shapefile.zip\n  inflating: modis_fire_2012_366_conus.dbf  \nArchive:  modis_fire_2013_365_conus_shapefile.zip\n  inflating: modis_fire_2013_365_conus.dbf  \nArchive:  modis_fire_2014_365_conus_shapefile.zip\n  inflating: modis_fire_2014_365_conus.dbf  \nArchive:  modis_fire_2015_365_conus_shapefile.zip\n  inflating: modis_fire_2015_365_conus.dbf  \nArchive:  modis_fire_2016_365_conus_shapefile.zip\n  inflating: modis_fire_2016_365_conus.dbf  \nArchive:  mcd14ml_2001_005_01_conus_shp.zip\n  inflating: mcd14ml_2001_005_01_conus.dbf  \nArchive:  mcd14ml_2002_005_01_conus_shp.zip\n  inflating: mcd14ml_2002_005_01_conus.dbf  \nArchive:  mcd14ml_2003_005_01_conus_shp.zip\n  inflating: mcd14ml_2003_005_01_conus.dbf  \nArchive:  mcd14ml_2004_005_01_conus_shp.zip\n  inflating: mcd14ml_2004_005_01_conus.dbf  \nArchive:  mcd14ml_2005_005_01_conus_shp.zip\n  inflating: mcd14ml_2005_005_01_conus.dbf  \nArchive:  mcd14ml_2006_005_01_conus_shp.zip\n  inflating: mcd14ml_2006_005_01_conus.dbf  \nArchive:  mcd14ml_2007_005_01_conus_shp.zip\n  inflating: mcd14ml_2007_005_01_conus.dbf  \nArchive:  mcd14ml_2008_005_01_conus_shp.zip\n  inflating: mcd14ml_2008_005_01_conus.dbf  \n"
+            "data": "find: `modis*.zip\u0027: No such file or directory\nfind: `mcd*.zip\u0027: No such file or directory\n"
           }
         ]
       },
@@ -70,14 +71,16 @@
       "jobName": "paragraph_1513798094035_-610176779",
       "id": "20171024-201248_1170429857",
       "dateCreated": "Dec 20, 2017 7:28:14 PM",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "Dec 20, 2017 7:31:53 PM",
+      "dateFinished": "Dec 20, 2017 7:31:58 PM",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Backup original dataset",
       "text": "%sh\nmaprcli volume snapshot create -cluster my.cluster.com -snapshotname USFS_Experiment-`date +%Y%m%d%H%M%S` -volume mapr_home\nls -la /mapr/my.cluster.com/user/mapr/.snapshot/\n\n",
-      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "user": "anonymous",
+      "dateUpdated": "Dec 20, 2017 7:32:23 PM",
       "config": {
         "enabled": true,
         "title": true,
@@ -94,11 +97,15 @@
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
+        "code": "ERROR",
         "msg": [
           {
             "type": "TEXT",
-            "data": "total 5\ndrwxr-xr-x 9 root root  7 Nov 16 20:06 .\ndrwxr-xr-x 9 mapr mapr 14 Nov 13 19:33 ..\ndrwxr-xr-x 9 mapr mapr 14 Nov 10 07:35 USFS_Experiment\ndrwxr-xr-x 9 mapr mapr 14 Nov  9 23:50 USFS_Experiment-20171110052951\ndrwxr-xr-x 9 mapr mapr 14 Nov  9 23:50 USFS_Experiment-20171110053003\ndrwxr-xr-x 9 mapr mapr 14 Nov 10 07:35 USFS_Experiment-20171110190032\ndrwxr-xr-x 9 mapr mapr 14 Nov 13 19:33 USFS_Experiment-20171114222959\ndrwxr-xr-x 9 mapr mapr 14 Nov 13 19:33 USFS_Experiment-20171114225504\ndrwxr-xr-x 9 mapr mapr 14 Nov 13 19:33 USFS_Experiment-20171116200610\n"
+            "data": "bash: maprcli: command not found\nls: cannot access /mapr/my.cluster.com/user/mapr/.snapshot/: No such file or directory\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "ExitValue: 2"
           }
         ]
       },
@@ -106,17 +113,19 @@
       "jobName": "paragraph_1513798094035_-610176779",
       "id": "20171110-052214_828862000",
       "dateCreated": "Dec 20, 2017 7:28:14 PM",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "Dec 20, 2017 7:32:23 PM",
+      "dateFinished": "Dec 20, 2017 7:32:23 PM",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Convert shapefiles to CSVs",
       "text": "%python\nimport csv\nfrom dbfpy import dbf\nimport os\nimport sys\nDATADIR\u003d\u0027/mapr/my.cluster.com/user/mapr/data/new/fires/\u0027\n\nfor filename in os.listdir(DATADIR):\n\n    if filename.endswith(\u0027.dbf\u0027):\n        print \"Converting %s to csv\" % filename\n        csv_fn \u003d DATADIR+filename[:-4]+ \".csv\"\n        with open(csv_fn,\u0027wb\u0027) as csvfile:\n            in_db \u003d dbf.Dbf(DATADIR+filename)\n            out_csv \u003d csv.writer(csvfile)\n            names \u003d []\n            for field in in_db.header.fields:\n                names.append(field.name)\n            out_csv.writerow(names)\n            for rec in in_db:\n                out_csv.writerow(rec.fieldData)\n            in_db.close()\n            print \"Done...\"\n\n",
-      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "user": "anonymous",
+      "dateUpdated": "Dec 20, 2017 7:32:48 PM",
       "config": {
         "enabled": true,
-        "tableHide": true,
+        "tableHide": false,
         "title": true,
         "editorMode": "ace/mode/python",
         "results": {},
@@ -132,11 +141,11 @@
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
+        "code": "ERROR",
         "msg": [
           {
             "type": "TEXT",
-            "data": "Converting mcd14ml_2002_005_01_conus.dbf to csv\nDone...\nConverting modis_fire_2009_365_conus.dbf to csv\nDone...\nConverting modis_fire_2013_365_conus.dbf to csv\nDone...\nConverting mcd14ml_2005_005_01_conus.dbf to csv\nDone...\nConverting modis_fire_2016_365_conus.dbf to csv\nDone...\nConverting modis_fire_2015_365_conus.dbf to csv\nDone...\nConverting mcd14ml_2004_005_01_conus.dbf to csv\nDone...\nConverting modis_fire_2011_365_conus.dbf to csv\nDone...\nConverting mcd14ml_2001_005_01_conus.dbf to csv\nDone...\nConverting modis_fire_2012_366_conus.dbf to csv\nDone...\nConverting mcd14ml_2003_005_01_conus.dbf to csv\nDone...\nConverting modis_fire_2014_365_conus.dbf to csv\nDone...\nConverting mcd14ml_2007_005_01_conus.dbf to csv\nDone...\nConverting mcd14ml_2008_005_01_conus.dbf to csv\nDone...\nConverting mcd14ml_2006_005_01_conus.dbf to csv\nDone...\nConverting modis_fire_2010_365_conus.dbf to csv\nDone...\n"
+            "data": "Traceback (most recent call last):\n  File \"/tmp/zeppelin_python-6014872155119521967.py\", line 283, in \u003cmodule\u003e\n    raise Exception(traceback.format_exc())\nException: Traceback (most recent call last):\n  File \"/tmp/zeppelin_python-6014872155119521967.py\", line 271, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 2, in \u003cmodule\u003e\nImportError: No module named dbfpy\n\n"
           }
         ]
       },
@@ -144,8 +153,9 @@
       "jobName": "paragraph_1513798094036_-612100523",
       "id": "20171024-202149_2037979424",
       "dateCreated": "Dec 20, 2017 7:28:14 PM",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "Dec 20, 2017 7:32:34 PM",
+      "dateFinished": "Dec 20, 2017 7:32:36 PM",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
@@ -503,7 +513,7 @@
     {
       "title": "Setup Map (initialize angular)",
       "text": "%angular\n\u003c!-- Avoid constantly editing JS and list the Angular vars you want exposed in an HTML attribute: --\u003e\n\u003cdiv id\u003d\"dummy\" vars\u003d\"centroid\"\u003e\u003c/div\u003e\n\u003cscript type\u003d\"text/javascript\"\u003e\n  //Given an element in the note \u0026 list of values to fetch from Spark\n  //window.angularVars.myVal will be current value of backend Spark val of same name\n  function hoist(element){\n    var varNames \u003d element.attr(\u0027vars\u0027).split(\u0027,\u0027);\n    window.angularVars \u003d {};\n    var scope \u003d angular.element(element.parent(\u0027.ng-scope\u0027)).scope().compiledScope;\n    $.each(varNames, function(i, v){\n      window[v+\u0027-watcher\u0027] \u003d scope.$watch(v, function(newVal, oldVal){\n        window.angularVars[v] \u003d newVal;\n      });\n    });\n  }\n  hoist($(\u0027#dummy\u0027));\n\u003c/script\u003e",
-      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "dateUpdated": "Dec 20, 2017 7:33:46 PM",
       "config": {
         "enabled": true,
         "title": true,
@@ -539,9 +549,24 @@
       "progressUpdateIntervalMs": 500
     },
     {
+      "user": "anonymous",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798426818_1797872998",
+      "id": "20171220-193346_657667086",
+      "dateCreated": "Dec 20, 2017 7:33:46 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
       "title": "Where would you stage firefighting equipment?",
       "text": "%angular\n\u003cdiv id\u003d\"map\" style\u003d\"height:500px;width:100%;\"\u003e\u003c/div\u003e\n\u003cscript type\u003d\"text/javascript\"\u003e\nfunction circle(pos, color, map){\n    var circle \u003d new google.maps.Circle({\n        strokeColor: color,\n        strokeOpacity: 0.8,\n        strokeWeight: 1,\n        fillColor: color,\n        fillOpacity: 0.3,\n        map: map,\n        center: pos,\n        radius: 40000   //default: 6.5\n    });\n}\n\n\nfunction initMap() {\n    var centroid \u003d window.angularVars.centroid;\n    var POIs \u003d {};\n    var USA \u003d {lat: 39.8282, lng: -98.5795};\n    var Cascadia \u003d  {lat: 45.5, lng: -115};\n    var map \u003d new google.maps.Map(document.getElementById(\u0027map\u0027), {zoom: 6, center: Cascadia });\n    //  Draw circles for each Centroid\n    $.each(centroid, function(i, v){\n         POIs[v.values[0]] \u003d v.values;\n         var pos \u003d {lat: parseFloat(v.values[0]), lng: parseFloat(v.values[1]) };\n         var color \u003d \u0027#FF0000\u0027\n         circle(pos, color, map);\n    });\n}\n\n//Only load GMaps once\nif (typeof google \u003d\u003d\u003d \u0027object\u0027 \u0026\u0026 typeof google.maps \u003d\u003d\u003d \u0027object\u0027) initMap();\nelse {\n    var script \u003d document.createElement(\"script\");\n    script.type \u003d \"text/javascript\";\n    //Replace with your API key\n    var apiKey \u003d \u0027AIzaSyCvFVSdCznu_b-pgSAFN9gqVGiFXngAvzk\u0027;\n    script.src \u003d \"https://maps.googleapis.com/maps/api/js?key\u003d\"+apiKey+\"\u0026callback\u003dinitMap\";\n    document.body.appendChild(script);\n}\n\u003c/script\u003e",
-      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "user": "anonymous",
+      "dateUpdated": "Dec 20, 2017 7:34:12 PM",
       "config": {
         "enabled": true,
         "tableHide": false,
@@ -560,11 +585,11 @@
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
+        "code": "ERROR",
         "msg": [
           {
-            "type": "ANGULAR",
-            "data": "\u003cdiv id\u003d\"map\" style\u003d\"height:500px;width:100%;\"\u003e\u003c/div\u003e\n\u003cscript type\u003d\"text/javascript\"\u003e\nfunction circle(pos, color, map){\n    var circle \u003d new google.maps.Circle({\n        strokeColor: color,\n        strokeOpacity: 0.8,\n        strokeWeight: 1,\n        fillColor: color,\n        fillOpacity: 0.3,\n        map: map,\n        center: pos,\n        radius: 40000   //default: 6.5\n    });\n}\n\n\nfunction initMap() {\n    var centroid \u003d window.angularVars.centroid;\n    var POIs \u003d {};\n    var USA \u003d {lat: 39.8282, lng: -98.5795};\n    var Cascadia \u003d  {lat: 45.5, lng: -115};\n    var map \u003d new google.maps.Map(document.getElementById(\u0027map\u0027), {zoom: 6, center: Cascadia });\n    //  Draw circles for each Centroid\n    $.each(centroid, function(i, v){\n         POIs[v.values[0]] \u003d v.values;\n         var pos \u003d {lat: parseFloat(v.values[0]), lng: parseFloat(v.values[1]) };\n         var color \u003d \u0027#FF0000\u0027\n         circle(pos, color, map);\n    });\n}\n\n//Only load GMaps once\nif (typeof google \u003d\u003d\u003d \u0027object\u0027 \u0026\u0026 typeof google.maps \u003d\u003d\u003d \u0027object\u0027) initMap();\nelse {\n    var script \u003d document.createElement(\"script\");\n    script.type \u003d \"text/javascript\";\n    //Replace with your API key\n    var apiKey \u003d \u0027AIzaSyCvFVSdCznu_b-pgSAFN9gqVGiFXngAvzk\u0027;\n    script.src \u003d \"https://maps.googleapis.com/maps/api/js?key\u003d\"+apiKey+\"\u0026callback\u003dinitMap\";\n    document.body.appendChild(script);\n}\n\u003c/script\u003e"
+            "type": "TEXT",
+            "data": "paragraph_1513798094039_-611715774\u0027s Interpreter angular not found"
           }
         ]
       },
@@ -572,8 +597,8 @@
       "jobName": "paragraph_1513798094039_-611715774",
       "id": "20171024-055723_1332952506",
       "dateCreated": "Dec 20, 2017 7:28:14 PM",
-      "status": "READY",
-      "errorMessage": "",
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.InterpreterException: paragraph_1513798094039_-611715774\u0027s Interpreter angular not found\n\tat org.apache.zeppelin.notebook.Note.run(Note.java:621)\n\tat org.apache.zeppelin.socket.NotebookServer.persistAndExecuteSingleParagraph(NotebookServer.java:1647)\n\tat org.apache.zeppelin.socket.NotebookServer.runParagraph(NotebookServer.java:1621)\n\tat org.apache.zeppelin.socket.NotebookServer.onMessage(NotebookServer.java:266)\n\tat org.apache.zeppelin.socket.NotebookSocket.onWebSocketText(NotebookSocket.java:59)\n\tat org.eclipse.jetty.websocket.common.events.JettyListenerEventDriver.onTextMessage(JettyListenerEventDriver.java:128)\n\tat org.eclipse.jetty.websocket.common.message.SimpleTextMessage.messageComplete(SimpleTextMessage.java:69)\n\tat org.eclipse.jetty.websocket.common.events.AbstractEventDriver.appendMessage(AbstractEventDriver.java:65)\n\tat org.eclipse.jetty.websocket.common.events.JettyListenerEventDriver.onTextFrame(JettyListenerEventDriver.java:122)\n\tat org.eclipse.jetty.websocket.common.events.AbstractEventDriver.incomingFrame(AbstractEventDriver.java:161)\n\tat org.eclipse.jetty.websocket.common.WebSocketSession.incomingFrame(WebSocketSession.java:309)\n\tat org.eclipse.jetty.websocket.common.extensions.ExtensionStack.incomingFrame(ExtensionStack.java:214)\n\tat org.eclipse.jetty.websocket.common.Parser.notifyFrame(Parser.java:220)\n\tat org.eclipse.jetty.websocket.common.Parser.parse(Parser.java:258)\n\tat org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection.readParse(AbstractWebSocketConnection.java:632)\n\tat org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection.onFillable(AbstractWebSocketConnection.java:480)\n\tat org.eclipse.jetty.io.AbstractConnection$2.run(AbstractConnection.java:544)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:635)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:555)\n\tat java.lang.Thread.run(Thread.java:748)\n",
       "progressUpdateIntervalMs": 500
     },
     {
@@ -827,7 +852,7 @@
     {
       "title": "Active Fires by State",
       "text": "%sql \nselect count(`Land Cover`), state from active_fires group by state order by count(`Land Cover`) desc limit 8",
-      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "dateUpdated": "Dec 20, 2017 7:34:20 PM",
       "config": {
         "enabled": true,
         "title": true,
@@ -839,7 +864,9 @@
               "height": 300.0,
               "optionOpen": false,
               "setting": {
-                "multiBarChart": {}
+                "multiBarChart": {
+                  "stacked": false
+                }
               },
               "commonSetting": {},
               "keys": [
@@ -891,7 +918,7 @@
     {
       "title": "Cumulative Fire Danger",
       "text": "%sql\nselect `Fire Danger`, `Land Cover` from active_fires where `Fire Danger` not like \u0027%N-A%\u0027\n",
-      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "dateUpdated": "Dec 20, 2017 7:34:35 PM",
       "config": {
         "enabled": true,
         "title": true,
