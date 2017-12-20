@@ -1,0 +1,1201 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md # Forest Fire Prediction through KMeans Clustering\n\u003cimg src\u003d\"https://surveymonkey-assets.s3.amazonaws.com/survey/121135814/6a48257c-8996-4aa6-ba56-6b1e373385c3.png\" width\u003d100 hspace\u003d\"20\" style\u003d\"float: right;\"\u003e\nThe United States Forest Service provides datasets that describe forest fires that have occurred in Canada and the United States since year 2000. We can  predict where forest fires are prone to occur by partitioning the locations of past burns into clusters whose centroids can be used to optimally place heavy fire fighting equipment as near as possible to where fires are likely to occur.\n\nDataset:\nhttps://fsapps.nwcg.gov/gisdata.php\n",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "tableHide": false,
+        "editorMode": "ace/mode/markdown",
+        "results": {},
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eForest Fire Prediction through KMeans Clustering\u003c/h1\u003e\n\u003cimg src\u003d\"https://surveymonkey-assets.s3.amazonaws.com/survey/121135814/6a48257c-8996-4aa6-ba56-6b1e373385c3.png\" width\u003d100 hspace\u003d\"20\" style\u003d\"float: right;\"\u003e\n\u003cp\u003eThe United States Forest Service provides datasets that describe forest fires that have occurred in Canada and the United States since year 2000. We can predict where forest fires are prone to occur by partitioning the locations of past burns into clusters whose centroids can be used to optimally place heavy fire fighting equipment as near as possible to where fires are likely to occur.\u003c/p\u003e\n\u003cp\u003eDataset:\u003cbr/\u003e\u003ca href\u003d\"https://fsapps.nwcg.gov/gisdata.php\"\u003ehttps://fsapps.nwcg.gov/gisdata.php\u003c/a\u003e\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094034_-609792030",
+      "id": "20171024-051623_427668146",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Download Raw Data ",
+      "text": "%sh\nrm -rf /mapr/my.cluster.com/user/mapr/data/new/fires\nmkdir -p /mapr/my.cluster.com/user/mapr/data/new/fires\ncd /mapr/my.cluster.com/user/mapr/data/new/fires\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2016_365_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2015_365_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2014_365_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2013_365_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2012_366_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2011_365_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2010_365_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/modis_fire_2009_365_conus_shapefile.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2008_005_01_conus_shp.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2007_005_01_conus_shp.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2006_005_01_conus_shp.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2005_005_01_conus_shp.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2004_005_01_conus_shp.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2003_005_01_conus_shp.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2002_005_01_conus_shp.zip\ncurl -s --remote-name https://fsapps.nwcg.gov/afm/data/fireptdata/mcd14ml_2001_005_01_conus_shp.zip\nfind modis*.zip | xargs -I {} unzip {} modis*.dbf\nfind mcd*.zip | xargs -I {} unzip {} mcd*.dbf",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "tableHide": false,
+        "editorMode": "ace/mode/sh",
+        "results": {},
+        "editorHide": false,
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Archive:  modis_fire_2009_365_conus_shapefile.zip\n  inflating: modis_fire_2009_365_conus.dbf  \nArchive:  modis_fire_2010_365_conus_shapefile.zip\n  inflating: modis_fire_2010_365_conus.dbf  \nArchive:  modis_fire_2011_365_conus_shapefile.zip\n  inflating: modis_fire_2011_365_conus.dbf  \nArchive:  modis_fire_2012_366_conus_shapefile.zip\n  inflating: modis_fire_2012_366_conus.dbf  \nArchive:  modis_fire_2013_365_conus_shapefile.zip\n  inflating: modis_fire_2013_365_conus.dbf  \nArchive:  modis_fire_2014_365_conus_shapefile.zip\n  inflating: modis_fire_2014_365_conus.dbf  \nArchive:  modis_fire_2015_365_conus_shapefile.zip\n  inflating: modis_fire_2015_365_conus.dbf  \nArchive:  modis_fire_2016_365_conus_shapefile.zip\n  inflating: modis_fire_2016_365_conus.dbf  \nArchive:  mcd14ml_2001_005_01_conus_shp.zip\n  inflating: mcd14ml_2001_005_01_conus.dbf  \nArchive:  mcd14ml_2002_005_01_conus_shp.zip\n  inflating: mcd14ml_2002_005_01_conus.dbf  \nArchive:  mcd14ml_2003_005_01_conus_shp.zip\n  inflating: mcd14ml_2003_005_01_conus.dbf  \nArchive:  mcd14ml_2004_005_01_conus_shp.zip\n  inflating: mcd14ml_2004_005_01_conus.dbf  \nArchive:  mcd14ml_2005_005_01_conus_shp.zip\n  inflating: mcd14ml_2005_005_01_conus.dbf  \nArchive:  mcd14ml_2006_005_01_conus_shp.zip\n  inflating: mcd14ml_2006_005_01_conus.dbf  \nArchive:  mcd14ml_2007_005_01_conus_shp.zip\n  inflating: mcd14ml_2007_005_01_conus.dbf  \nArchive:  mcd14ml_2008_005_01_conus_shp.zip\n  inflating: mcd14ml_2008_005_01_conus.dbf  \n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094035_-610176779",
+      "id": "20171024-201248_1170429857",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Backup original dataset",
+      "text": "%sh\nmaprcli volume snapshot create -cluster my.cluster.com -snapshotname USFS_Experiment-`date +%Y%m%d%H%M%S` -volume mapr_home\nls -la /mapr/my.cluster.com/user/mapr/.snapshot/\n\n",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/sh",
+        "results": {},
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "total 5\ndrwxr-xr-x 9 root root  7 Nov 16 20:06 .\ndrwxr-xr-x 9 mapr mapr 14 Nov 13 19:33 ..\ndrwxr-xr-x 9 mapr mapr 14 Nov 10 07:35 USFS_Experiment\ndrwxr-xr-x 9 mapr mapr 14 Nov  9 23:50 USFS_Experiment-20171110052951\ndrwxr-xr-x 9 mapr mapr 14 Nov  9 23:50 USFS_Experiment-20171110053003\ndrwxr-xr-x 9 mapr mapr 14 Nov 10 07:35 USFS_Experiment-20171110190032\ndrwxr-xr-x 9 mapr mapr 14 Nov 13 19:33 USFS_Experiment-20171114222959\ndrwxr-xr-x 9 mapr mapr 14 Nov 13 19:33 USFS_Experiment-20171114225504\ndrwxr-xr-x 9 mapr mapr 14 Nov 13 19:33 USFS_Experiment-20171116200610\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094035_-610176779",
+      "id": "20171110-052214_828862000",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Convert shapefiles to CSVs",
+      "text": "%python\nimport csv\nfrom dbfpy import dbf\nimport os\nimport sys\nDATADIR\u003d\u0027/mapr/my.cluster.com/user/mapr/data/new/fires/\u0027\n\nfor filename in os.listdir(DATADIR):\n\n    if filename.endswith(\u0027.dbf\u0027):\n        print \"Converting %s to csv\" % filename\n        csv_fn \u003d DATADIR+filename[:-4]+ \".csv\"\n        with open(csv_fn,\u0027wb\u0027) as csvfile:\n            in_db \u003d dbf.Dbf(DATADIR+filename)\n            out_csv \u003d csv.writer(csvfile)\n            names \u003d []\n            for field in in_db.header.fields:\n                names.append(field.name)\n            out_csv.writerow(names)\n            for rec in in_db:\n                out_csv.writerow(rec.fieldData)\n            in_db.close()\n            print \"Done...\"\n\n",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "tableHide": true,
+        "title": true,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "editorHide": false,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Converting mcd14ml_2002_005_01_conus.dbf to csv\nDone...\nConverting modis_fire_2009_365_conus.dbf to csv\nDone...\nConverting modis_fire_2013_365_conus.dbf to csv\nDone...\nConverting mcd14ml_2005_005_01_conus.dbf to csv\nDone...\nConverting modis_fire_2016_365_conus.dbf to csv\nDone...\nConverting modis_fire_2015_365_conus.dbf to csv\nDone...\nConverting mcd14ml_2004_005_01_conus.dbf to csv\nDone...\nConverting modis_fire_2011_365_conus.dbf to csv\nDone...\nConverting mcd14ml_2001_005_01_conus.dbf to csv\nDone...\nConverting modis_fire_2012_366_conus.dbf to csv\nDone...\nConverting mcd14ml_2003_005_01_conus.dbf to csv\nDone...\nConverting modis_fire_2014_365_conus.dbf to csv\nDone...\nConverting mcd14ml_2007_005_01_conus.dbf to csv\nDone...\nConverting mcd14ml_2008_005_01_conus.dbf to csv\nDone...\nConverting mcd14ml_2006_005_01_conus.dbf to csv\nDone...\nConverting modis_fire_2010_365_conus.dbf to csv\nDone...\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094036_-612100523",
+      "id": "20171024-202149_2037979424",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Import Spark ML Libraries",
+      "text": "import org.apache.spark._\nimport org.apache.spark.rdd.RDD\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql.functions._\nimport org.apache.spark.sql._\nimport org.apache.spark._\nimport org.apache.spark.ml.feature.StringIndexer\nimport org.apache.spark.ml.feature.VectorAssembler\nimport org.apache.spark.ml.clustering.KMeans\nimport org.apache.spark.ml.clustering.KMeansModel\nimport org.apache.spark.mllib.linalg.Vectors",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "tableHide": true,
+        "results": [
+          {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "keys": [],
+              "values": [],
+              "groups": [],
+              "scatter": {}
+            }
+          }
+        ],
+        "editorMode": "ace/mode/scala",
+        "editorHide": false,
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\nimport org.apache.spark._\n\nimport org.apache.spark.rdd.RDD\n\nimport org.apache.spark.sql.types._\n\nimport org.apache.spark.sql.functions._\n\nimport org.apache.spark.sql._\n\nimport org.apache.spark._\n\nimport org.apache.spark.ml.feature.StringIndexer\n\nimport org.apache.spark.ml.feature.VectorAssembler\n\nimport org.apache.spark.ml.clustering.KMeans\n\nimport org.apache.spark.ml.clustering.KMeansModel\n\nimport org.apache.spark.mllib.linalg.Vectors\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094036_-612100523",
+      "id": "20161030-025214_1655763979",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Define schema for datasets since 2009",
+      "text": "import sqlContext.implicits._\nimport sqlContext._\nval modis_schema \u003d StructType(Array(\n  StructField(\"area\", DoubleType, true),\n  StructField(\"perimeter\", DoubleType, true),\n  StructField(\"firenum\", IntegerType, true),      \n  StructField(\"fire_id\", IntegerType, true),      \n  StructField(\"latitude\", DoubleType, true),\n  StructField(\"longitude\", DoubleType, true),\n  StructField(\"date\", TimestampType, true),\n  StructField(\"julian\", IntegerType, true),\n  StructField(\"gmt\", IntegerType, true),\n  StructField(\"temp\", DoubleType, true),     \n  StructField(\"spix\", DoubleType, true),      \n  StructField(\"tpix\", DoubleType, true),            \n  StructField(\"src\", StringType, true),\n  StructField(\"sat_src\", StringType, true),      \n  StructField(\"conf\", IntegerType, true),\n  StructField(\"frp\", DoubleType, true)\n))",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "tableHide": true,
+        "editorMode": "ace/mode/scala",
+        "results": [
+          {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "keys": [],
+              "values": [],
+              "groups": [],
+              "scatter": {}
+            }
+          }
+        ],
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\nimport sqlContext.implicits._\n\nimport sqlContext._\n\nmodis_schema: org.apache.spark.sql.types.StructType \u003d StructType(StructField(area,DoubleType,true), StructField(perimeter,DoubleType,true), StructField(firenum,IntegerType,true), StructField(fire_id,IntegerType,true), StructField(latitude,DoubleType,true), StructField(longitude,DoubleType,true), StructField(date,TimestampType,true), StructField(julian,IntegerType,true), StructField(gmt,IntegerType,true), StructField(temp,DoubleType,true), StructField(spix,DoubleType,true), StructField(tpix,DoubleType,true), StructField(src,StringType,true), StructField(sat_src,StringType,true), StructField(conf,IntegerType,true), StructField(frp,DoubleType,true))\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094037_-612485272",
+      "id": "20161030-030543_519944270",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Define schema for datasets before 2009",
+      "text": "import sqlContext.implicits._\nimport sqlContext._\nval mcd14ml_schema \u003d StructType(Array(\n  StructField(\"area\", DoubleType, true),\n  StructField(\"perimeter\", DoubleType, true),\n  StructField(\"mcd14ml_\", IntegerType, true),      \n  StructField(\"latitude\", DoubleType, true),      \n  StructField(\"longitude\", DoubleType, true),\n  StructField(\"t21\", DoubleType, true),\n  StructField(\"t31\", DoubleType, true),\n  StructField(\"spix\", DoubleType, true),\n  StructField(\"tpix\", DoubleType, true),\n  StructField(\"date\", TimestampType, true),     \n  StructField(\"jdate\", IntegerType, true),      \n  StructField(\"utc\", IntegerType, true),            \n  StructField(\"satellite\", StringType, true),\n  StructField(\"frp\", DoubleType, true),      \n  StructField(\"confidence\", IntegerType, true)\n))",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "tableHide": true,
+        "editorMode": "ace/mode/scala",
+        "results": [
+          {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "keys": [],
+              "values": [],
+              "groups": [],
+              "scatter": {}
+            }
+          }
+        ],
+        "editorHide": false,
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\nimport sqlContext.implicits._\n\nimport sqlContext._\n\nmcd14ml_schema: org.apache.spark.sql.types.StructType \u003d StructType(StructField(area,DoubleType,true), StructField(perimeter,DoubleType,true), StructField(mcd14ml_,IntegerType,true), StructField(latitude,DoubleType,true), StructField(longitude,DoubleType,true), StructField(t21,DoubleType,true), StructField(t31,DoubleType,true), StructField(spix,DoubleType,true), StructField(tpix,DoubleType,true), StructField(date,TimestampType,true), StructField(jdate,IntegerType,true), StructField(utc,IntegerType,true), StructField(satellite,StringType,true), StructField(frp,DoubleType,true), StructField(confidence,IntegerType,true))\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094037_-612485272",
+      "id": "20171026-031641_291214581",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Load Raw Data",
+      "text": "// Load datasets containing years 2009-2016\nval df_modis_all \u003d sqlContext.read.format(\"com.databricks.spark.csv\").option(\"header\", \"true\").schema(modis_schema).load(\"/user/mapr/data/fires/modis*.csv\")\n// Include only fires with coordinates in Cascadia\nval df_modis \u003d df_modis_all.filter($\"latitude\" \u003e 42).filter($\"latitude\" \u003c 50).filter($\"longitude\" \u003e -124).filter($\"longitude\" \u003c -110)\n// Load datasets containing years 2000-2008\nval df_mcd14ml_all \u003d sqlContext.read.format(\"com.databricks.spark.csv\").option(\"header\", \"true\").schema(modis_schema).load(\"/user/mapr/data/fires/mcd14ml*.csv\")\n// Include only fires with coordinates in Cascadia\nval df_mcd14ml \u003d df_mcd14ml_all.filter($\"latitude\" \u003e 42).filter($\"latitude\" \u003c 50).filter($\"longitude\" \u003e -124).filter($\"longitude\" \u003c -110)\n// Join both datasets\nval df \u003d df_modis.union(df_mcd14ml).select($\"latitude\", $\"longitude\")",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/scala",
+        "results": [
+          {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "keys": [],
+              "values": [],
+              "groups": [],
+              "scatter": {}
+            }
+          }
+        ],
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\ndf_modis_all: org.apache.spark.sql.DataFrame \u003d [area: double, perimeter: double ... 14 more fields]\n\ndf_modis: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [area: double, perimeter: double ... 14 more fields]\n\ndf_mcd14ml_all: org.apache.spark.sql.DataFrame \u003d [area: double, perimeter: double ... 14 more fields]\n\ndf_mcd14ml: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [area: double, perimeter: double ... 14 more fields]\n\ndf: org.apache.spark.sql.DataFrame \u003d [latitude: double, longitude: double]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094037_-612485272",
+      "id": "20161030-030618_394385178",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "What does this data look like, anyway?",
+      "text": "df_modis.show(10)\ndf.count()",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/scala",
+        "results": {},
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+----+---------+-------+-------+--------+---------+--------------------+------+----+-----+----+----+----+-------+----+-----+\n|area|perimeter|firenum|fire_id|latitude|longitude|                date|julian| gmt| temp|spix|tpix| src|sat_src|conf|  frp|\n+----+---------+-------+-------+--------+---------+--------------------+------+----+-----+----+----+----+-------+----+-----+\n| 0.0|      0.0|      1| 760349|  49.455| -120.222|2012-12-02 00:00:...|   337|1938|327.4| 1.8| 1.3|ssec|      T|  80|104.9|\n| 0.0|      0.0|      2| 760350|  49.455| -120.222|2012-12-02 00:00:...|   337|1940|327.7| 1.8| 1.3|gsfc|      T|  81|105.8|\n| 0.0|      0.0|     10| 751851|  49.447| -118.341|2012-11-08 00:00:...|   313|1849|341.3| 1.1| 1.0|ssec|      T|  91| 69.6|\n| 0.0|      0.0|     11| 751852|  49.447| -118.341|2012-11-08 00:00:...|   313|1849|341.3| 1.1| 1.0|rsac|      T|  91| 69.6|\n| 0.0|      0.0|     12| 751853|  49.447| -118.341|2012-11-08 00:00:...|   313|1850|341.0| 1.0| 1.0|gsfc|      T|  90| 68.8|\n| 0.0|      0.0|     18| 368270|  49.442| -118.334|2012-11-08 00:00:...|   313|2030|315.6| 1.1| 1.0|rsac|      A|   0| 30.1|\n| 0.0|      0.0|     19| 368272|  49.442| -118.334|2012-11-08 00:00:...|   313|2035|315.6| 1.1| 1.0|gsfc|      A|   0| 30.5|\n| 0.0|      0.0|     20| 368271|  49.442| -118.334|2012-11-08 00:00:...|   313|2032|315.6| 1.1| 1.0|ssec|      A|   0| 30.1|\n| 0.0|      0.0|     24| 751847|  49.438| -118.343|2012-11-08 00:00:...|   313|1849|310.1| 1.1| 1.0|ssec|      T|  29| 24.1|\n| 0.0|      0.0|     25| 751846|  49.438| -118.343|2012-11-08 00:00:...|   313|1849|310.1| 1.1| 1.0|rsac|      T|  29| 24.1|\n+----+---------+-------+-------+--------+---------+--------------------+------+----+-----+----+----+----+-------+----+-----+\nonly showing top 10 rows\n\n\nres94: Long \u003d 382059\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094038_-611331025",
+      "id": "20171026-045121_278676373",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Train the KMeans model for 100 clusters",
+      "text": "val featureCols \u003d Array(\"latitude\", \"longitude\")\nval assembler \u003d new VectorAssembler().setInputCols(featureCols).setOutputCol(\"features\")\nval df2 \u003d assembler.transform(df)\nval Array(trainingData, testData) \u003d df2.randomSplit(Array(0.7, 0.3), 5043)\n\nval kmeans \u003d new KMeans().setK(100).setFeaturesCol(\"features\").setMaxIter(4)\nval model \u003d kmeans.fit(trainingData)\nprintln(\"Final Centers: \")\nmodel.clusterCenters.foreach(println)",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/scala",
+        "results": [
+          {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "keys": [],
+              "values": [],
+              "groups": [],
+              "scatter": {}
+            }
+          }
+        ],
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\nfeatureCols: Array[String] \u003d Array(latitude, longitude)\n\nassembler: org.apache.spark.ml.feature.VectorAssembler \u003d vecAssembler_ecd55edbbe42\n\ndf2: org.apache.spark.sql.DataFrame \u003d [latitude: double, longitude: double ... 1 more field]\n\n\ntrainingData: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [latitude: double, longitude: double ... 1 more field]\ntestData: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [latitude: double, longitude: double ... 1 more field]\n\nkmeans: org.apache.spark.ml.clustering.KMeans \u003d kmeans_6d3db2181746\n\nmodel: org.apache.spark.ml.clustering.KMeansModel \u003d kmeans_6d3db2181746\nFinal Centers: \n[42.680210355177884,-111.59725937968977]\n[43.46119708737863,-123.4865427184466]\n[42.442929411764744,-117.53071372549019]\n[46.0875555350554,-117.83899317343179]\n[45.41602265641227,-114.0714599875284]\n[47.55513630540607,-113.53880297207272]\n[48.053261769911444,-120.0575677876107]\n[44.56749924698794,-120.14084864457843]\n[44.82837657623227,-115.5686400458541]\n[47.19294624505929,-116.3193355731225]\n[46.0001227998363,-121.42910908718788]\n[44.8225060851927,-121.18407758620698]\n[48.33468846079004,-118.85384316014812]\n[42.190387077294645,-120.67088979468606]\n[44.02496713615028,-110.15051525821596]\n[48.84425513196482,-122.80656598240468]\n[42.31075105485234,-122.05234358047026]\n[47.551169991326965,-110.58471465741545]\n[48.366605830765494,-119.25822801611778]\n[48.64446906398731,-117.12346694870438]\n[43.585575029080985,-114.48100155098888]\n[44.658283501161904,-121.77650561580175]\n[44.2141452775774,-118.80088211968264]\n[44.55109049773757,-111.99945135746607]\n[44.18748645226641,-115.5765583692076]\n[46.32117078916372,-123.24499646643106]\n[42.52315782286375,-123.75475790089729]\n[47.83102030838668,-113.02192553591584]\n[47.88128612303293,-115.86531330472098]\n[47.12880022363031,-120.65368169958985]\n[49.058754511120405,-116.16455518254297]\n[46.380826304691595,-113.73693647865049]\n[42.44345835543764,-115.48029708222808]\n[48.59209729418539,-120.00220245634236]\n[45.832998529411775,-119.65369852941178]\n[42.80554616087751,-118.89474588665446]\n[45.599176134333675,-116.27001750625217]\n[48.933861839804116,-118.36850682056688]\n[49.048490677134495,-114.68882433758593]\n[46.53233677991136,-120.07666395864108]\n[46.81406035665295,-111.96022908093278]\n[47.1773843137255,-117.76145490196078]\n[43.81896350364965,-111.10441423357665]\n[43.16925459375698,-122.42875027673234]\n[44.98837316293926,-117.31802939297128]\n[45.092147323173165,-116.45970379054316]\n[43.94497546728972,-117.09796144859811]\n[47.73799279279282,-111.90307207207206]\n[46.80794588449294,-115.59445702592082]\n[43.30027756410261,-114.9767320512819]\n[46.09602029064988,-115.33729366602705]\n[48.499308211473554,-113.3735359955005]\n[44.98750756756764,-118.83719081081081]\n[44.40895686591275,-114.98714361874055]\n[47.24852644492911,-116.94616739367501]\n[45.91029123173278,-111.63577557411271]\n[48.003583602584705,-118.1010024232631]\n[47.21107859888938,-112.88779026057243]\n[45.47023435063486,-115.44834172421476]\n[43.238007769145376,-116.86420588235295]\n[46.941102733270526,-114.56711545711585]\n[46.65701529902643,-117.49917941585535]\n[45.94805246913578,-114.46334876543213]\n[48.68818710324091,-119.61178349482135]\n[48.989644295302,-120.55701135776974]\n[46.945085929108494,-119.16613748657356]\n[44.985136440391756,-110.62700236406614]\n[43.04288829787237,-120.98841445035451]\n[44.484553467271546,-122.90281594296823]\n[48.713811594202916,-110.6999927536232]\n[44.41465921945706,-117.99498783936656]\n[47.60024606580833,-120.80637696709574]\n[43.30823627998692,-118.22460795267843]\n[45.525432050701745,-114.76495699411534]\n[45.06997001303781,-123.51793546284232]\n[46.03363036649214,-118.63290209424083]\n[42.411339405560874,-113.01552540747844]\n[47.353657579062165,-122.92253217011991]\n[42.53206368330465,-122.91702237521517]\n[46.33238826102806,-116.22532664965372]\n[48.13757210578842,-120.63054391217578]\n[43.42515586116568,-112.30286116568435]\n[47.41553032015065,-120.28863050847455]\n[43.98151189785259,-116.05173766686019]\n[44.031103838245336,-119.47318060315274]\n[47.7202422171602,-114.89755618830677]\n[43.36918918918921,-110.43353443766351]\n[42.23112643678158,-112.30654844006571]\n[48.53467159450896,-115.09414625131996]\n[42.19413026052105,-118.14942525050081]\n[45.980087702573876,-116.88747473784561]\n[46.2978552056652,-114.7551792978756]\n[43.361500727096455,-115.6408245273873]\n[42.509375226586116,-110.5823160120845]\n[44.030212504652035,-121.63664123557874]\n[45.64626304464767,-120.59849650349648]\n[43.691489661882756,-115.3556038676723]\n[44.70506696208765,-114.67740915805025]\n[48.59285780346821,-114.0871531791909]\n[42.57220040180812,-114.04146408839789]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094038_-611331025",
+      "id": "20161030-041240_922666463",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Save the Model",
+      "text": "model.write.overwrite().save(\"/user/mapr/data/save_fire_model-cascadia\")\nval samemodel \u003d KMeansModel.load(\"/user/mapr/data/save_fire_model-cascadia\")",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/scala",
+        "results": {},
+        "editorHide": false,
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\nsamemodel: org.apache.spark.ml.clustering.KMeansModel \u003d kmeans_6d3db2181746\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094038_-611331025",
+      "id": "20171024-060732_541192335",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Setup Map (save centroids)",
+      "text": "z.angularBind(\"centroid\", model.clusterCenters)",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "tableHide": true,
+        "title": true,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "editorMode": "ace/mode/scala",
+        "results": {},
+        "editorHide": false,
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094039_-611715774",
+      "id": "20161116-075433_1562509402",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Setup Map (initialize angular)",
+      "text": "%angular\n\u003c!-- Avoid constantly editing JS and list the Angular vars you want exposed in an HTML attribute: --\u003e\n\u003cdiv id\u003d\"dummy\" vars\u003d\"centroid\"\u003e\u003c/div\u003e\n\u003cscript type\u003d\"text/javascript\"\u003e\n  //Given an element in the note \u0026 list of values to fetch from Spark\n  //window.angularVars.myVal will be current value of backend Spark val of same name\n  function hoist(element){\n    var varNames \u003d element.attr(\u0027vars\u0027).split(\u0027,\u0027);\n    window.angularVars \u003d {};\n    var scope \u003d angular.element(element.parent(\u0027.ng-scope\u0027)).scope().compiledScope;\n    $.each(varNames, function(i, v){\n      window[v+\u0027-watcher\u0027] \u003d scope.$watch(v, function(newVal, oldVal){\n        window.angularVars[v] \u003d newVal;\n      });\n    });\n  }\n  hoist($(\u0027#dummy\u0027));\n\u003c/script\u003e",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "tableHide": false,
+        "editorMode": "ace/mode/undefined",
+        "results": {},
+        "editorHide": true,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "ANGULAR",
+            "data": "\u003c!-- Avoid constantly editing JS and list the Angular vars you want exposed in an HTML attribute: --\u003e\n\u003cdiv id\u003d\"dummy\" vars\u003d\"centroid\"\u003e\u003c/div\u003e\n\u003cscript type\u003d\"text/javascript\"\u003e\n  //Given an element in the note \u0026 list of values to fetch from Spark\n  //window.angularVars.myVal will be current value of backend Spark val of same name\n  function hoist(element){\n    var varNames \u003d element.attr(\u0027vars\u0027).split(\u0027,\u0027);\n    window.angularVars \u003d {};\n    var scope \u003d angular.element(element.parent(\u0027.ng-scope\u0027)).scope().compiledScope;\n    $.each(varNames, function(i, v){\n      window[v+\u0027-watcher\u0027] \u003d scope.$watch(v, function(newVal, oldVal){\n        window.angularVars[v] \u003d newVal;\n      });\n    });\n  }\n  hoist($(\u0027#dummy\u0027));\n\u003c/script\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094039_-611715774",
+      "id": "20171024-055715_1739605740",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Where would you stage firefighting equipment?",
+      "text": "%angular\n\u003cdiv id\u003d\"map\" style\u003d\"height:500px;width:100%;\"\u003e\u003c/div\u003e\n\u003cscript type\u003d\"text/javascript\"\u003e\nfunction circle(pos, color, map){\n    var circle \u003d new google.maps.Circle({\n        strokeColor: color,\n        strokeOpacity: 0.8,\n        strokeWeight: 1,\n        fillColor: color,\n        fillOpacity: 0.3,\n        map: map,\n        center: pos,\n        radius: 40000   //default: 6.5\n    });\n}\n\n\nfunction initMap() {\n    var centroid \u003d window.angularVars.centroid;\n    var POIs \u003d {};\n    var USA \u003d {lat: 39.8282, lng: -98.5795};\n    var Cascadia \u003d  {lat: 45.5, lng: -115};\n    var map \u003d new google.maps.Map(document.getElementById(\u0027map\u0027), {zoom: 6, center: Cascadia });\n    //  Draw circles for each Centroid\n    $.each(centroid, function(i, v){\n         POIs[v.values[0]] \u003d v.values;\n         var pos \u003d {lat: parseFloat(v.values[0]), lng: parseFloat(v.values[1]) };\n         var color \u003d \u0027#FF0000\u0027\n         circle(pos, color, map);\n    });\n}\n\n//Only load GMaps once\nif (typeof google \u003d\u003d\u003d \u0027object\u0027 \u0026\u0026 typeof google.maps \u003d\u003d\u003d \u0027object\u0027) initMap();\nelse {\n    var script \u003d document.createElement(\"script\");\n    script.type \u003d \"text/javascript\";\n    //Replace with your API key\n    var apiKey \u003d \u0027AIzaSyCvFVSdCznu_b-pgSAFN9gqVGiFXngAvzk\u0027;\n    script.src \u003d \"https://maps.googleapis.com/maps/api/js?key\u003d\"+apiKey+\"\u0026callback\u003dinitMap\";\n    document.body.appendChild(script);\n}\n\u003c/script\u003e",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "tableHide": false,
+        "title": true,
+        "editorMode": "ace/mode/undefined",
+        "results": {},
+        "editorHide": true,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "ANGULAR",
+            "data": "\u003cdiv id\u003d\"map\" style\u003d\"height:500px;width:100%;\"\u003e\u003c/div\u003e\n\u003cscript type\u003d\"text/javascript\"\u003e\nfunction circle(pos, color, map){\n    var circle \u003d new google.maps.Circle({\n        strokeColor: color,\n        strokeOpacity: 0.8,\n        strokeWeight: 1,\n        fillColor: color,\n        fillOpacity: 0.3,\n        map: map,\n        center: pos,\n        radius: 40000   //default: 6.5\n    });\n}\n\n\nfunction initMap() {\n    var centroid \u003d window.angularVars.centroid;\n    var POIs \u003d {};\n    var USA \u003d {lat: 39.8282, lng: -98.5795};\n    var Cascadia \u003d  {lat: 45.5, lng: -115};\n    var map \u003d new google.maps.Map(document.getElementById(\u0027map\u0027), {zoom: 6, center: Cascadia });\n    //  Draw circles for each Centroid\n    $.each(centroid, function(i, v){\n         POIs[v.values[0]] \u003d v.values;\n         var pos \u003d {lat: parseFloat(v.values[0]), lng: parseFloat(v.values[1]) };\n         var color \u003d \u0027#FF0000\u0027\n         circle(pos, color, map);\n    });\n}\n\n//Only load GMaps once\nif (typeof google \u003d\u003d\u003d \u0027object\u0027 \u0026\u0026 typeof google.maps \u003d\u003d\u003d \u0027object\u0027) initMap();\nelse {\n    var script \u003d document.createElement(\"script\");\n    script.type \u003d \"text/javascript\";\n    //Replace with your API key\n    var apiKey \u003d \u0027AIzaSyCvFVSdCznu_b-pgSAFN9gqVGiFXngAvzk\u0027;\n    script.src \u003d \"https://maps.googleapis.com/maps/api/js?key\u003d\"+apiKey+\"\u0026callback\u003dinitMap\";\n    document.body.appendChild(script);\n}\n\u003c/script\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094039_-611715774",
+      "id": "20171024-055723_1332952506",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md # Operationalizing the model\n***Which staging area should respond when a new forest fire starts?***\nWe can use our previously saved model to answer that question. The following section shows how the model we built above can be used to answer that question and how it can be applied to a live feed of newly detected fires for rapid fire response.\n",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "tableHide": false,
+        "editorMode": "ace/mode/markdown",
+        "results": {},
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eOperationalizing the model\u003c/h1\u003e\n\u003cp\u003e\u003cstrong\u003e\u003cem\u003eWhich staging area should respond when a new forest fire starts?\u003c/em\u003e\u003c/strong\u003e\u003cbr/\u003eWe can use our previously saved model to answer that question. The following section shows how the model we built above can be used to answer that question and how it can be applied to a live feed of newly detected fires for rapid fire response.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094040_-613639519",
+      "id": "20171110-050323_189619447",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Which fire station (centroid) should respond to a new fire?",
+      "text": "val featureCols \u003d Array(\"lat\", \"lon\")\nval assembler \u003d new VectorAssembler().setInputCols(featureCols).setOutputCol(\"features\")\nval fire_location \u003d Seq((42.3,-112.2 )).toDF(\"lat\", \"lon\")\nval df3 \u003d assembler.transform(fire_location)\nval categories \u003d model.transform(df3)\nval centroid_id \u003d categories.select(\"prediction\").rdd.map(r \u003d\u003e r(0)).collect()(0).asInstanceOf[Int]\nval centroid_coordinate \u003d model.clusterCenters(centroid_id)\nprintln(\"%html \u003ch1\u003eNotify fire station #\" + centroid_id + \" at location \" + centroid_coordinate)",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/scala",
+        "results": {},
+        "editorSetting": {
+          "language": "scala"
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\nfeatureCols: Array[String] \u003d Array(lat, lon)\n\nassembler: org.apache.spark.ml.feature.VectorAssembler \u003d vecAssembler_5ec888883c0e\n\nfire_location: org.apache.spark.sql.DataFrame \u003d [lat: double, lon: double]\n\ndf3: org.apache.spark.sql.DataFrame \u003d [lat: double, lon: double ... 1 more field]\n\ncategories: org.apache.spark.sql.DataFrame \u003d [lat: double, lon: double ... 2 more fields]\n\ncentroid_id: Int \u003d 87\n\ncentroid_coordinate: org.apache.spark.ml.linalg.Vector \u003d [42.23112643678158,-112.30654844006571]\n"
+          },
+          {
+            "type": "HTML",
+            "data": "\u003ch1\u003eNotify fire station #87 at location [42.23112643678158,-112.30654844006571]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094040_-613639519",
+      "id": "20171109-002326_1996678963",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md Now that we can identify which fire station should respond to a fire, \nlets identify which fire stations should respond to all the currently active fires posted by USFS.",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "tableHide": false,
+        "editorMode": "ace/mode/markdown",
+        "results": {},
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eNow that we can identify which fire station should respond to a fire,\u003cbr/\u003elets identify which fire stations should respond to all the currently active fires posted by USFS.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094041_-614024268",
+      "id": "20171110-054814_331474225",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Initialize web scraper",
+      "text": "%pyspark \nimport requests\nimport pandas as pd\nfrom bs4 import BeautifulSoup\n\nclass HTMLTableParser:   \n    def parse_url(self, url):\n        response \u003d requests.get(url)\n        soup \u003d BeautifulSoup(response.text, \u0027lxml\u0027)\n        return [(table,self.parse_html_table(table))\\\n                for table in soup.find_all(\u0027table\u0027)]  \n    def parse_html_table(self, table):\n        n_columns \u003d 0\n        n_rows\u003d0\n        column_names \u003d []\n        # Find number of rows and columns\n        # we also find the column titles if we can\n        for row in table.find_all(\u0027tr\u0027):            \n            # Determine the number of rows in the table\n            td_tags \u003d row.find_all(\u0027td\u0027)\n            if len(td_tags) \u003e 0:\n                n_rows+\u003d1\n                if n_columns \u003d\u003d 0:\n                    # Set the number of columns for our table\n                    n_columns \u003d len(td_tags)\n            # Handle column names if we find them\n            th_tags \u003d row.find_all(\u0027th\u0027) \n            if len(th_tags) \u003e 0 and len(column_names) \u003d\u003d 0:\n                for th in th_tags:\n                    column_names.append(th.get_text())\n        # Safeguard on Column Titles\n        if len(column_names) \u003e 0 and len(column_names) !\u003d n_columns:\n            raise Exception(\"Column titles do not match the number of columns\")\n        columns \u003d column_names if len(column_names) \u003e 0 else range(0,n_columns)\n        df \u003d pd.DataFrame(columns \u003d columns,\n                          index\u003d range(0,n_rows))\n        row_marker \u003d 0\n        for row in table.find_all(\u0027tr\u0027):\n            column_marker \u003d 0\n            columns \u003d row.find_all(\u0027td\u0027)\n            for column in columns:\n                df.iat[row_marker,column_marker] \u003d column.get_text()\n                column_marker +\u003d 1\n            if len(columns) \u003e 0:\n                row_marker +\u003d 1\n        # Convert to float if possible\n        for col in df:\n            try:\n                df[col] \u003d df[col].astype(float)\n            except ValueError:\n                pass \n        return df",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "editorHide": true,
+        "editorSetting": {
+          "language": "python"
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094041_-614024268",
+      "id": "20171109-002346_1337732733",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Scrape real-time fire detections from web",
+      "text": "%pyspark \nurl\u003d\"https://fsapps.nwcg.gov/afm/current.php?op\u003dtable\u0026sensor\u003dmodis\"\nhp \u003d HTMLTableParser()\ndf \u003d hp.parse_url(url)[4][1] \n# rename the columns according to what\u0027s in the first row\ndf.columns \u003d df.iloc[0]\ndf \u003d df.reindex(df.index.drop(0))\nspark_df \u003d sqlContext.createDataFrame(df)\nspark_df.registerTempTable(\"active_fires\") # Save as table\nspark_df.printSchema()",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/python",
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": true,
+              "setting": {
+                "multiBarChart": {},
+                "pieChart": {}
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "10",
+                  "index": 10.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [
+                {
+                  "name": "8",
+                  "index": 8.0,
+                  "aggr": "sum"
+                }
+              ],
+              "values": [
+                {
+                  "name": "10",
+                  "index": 10.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "python"
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "pyspark is not responding"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094041_-614024268",
+      "id": "20171109-002358_1073971632",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "",
+      "text": "%pyspark \nprint(\"%html \u003ch1\u003e There are \" + str(len(df.index)) + \" fires currently active!\u003c/h1\u003e\")",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": false,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "pyspark is not responding"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094042_-612870021",
+      "id": "20171109-002629_2093508410",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Active Fires by State",
+      "text": "%sql \nselect count(`Land Cover`), state from active_fires group by state order by count(`Land Cover`) desc limit 8",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/sql",
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "multiBarChart": {}
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "state",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "count(Land Cover)",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "count(Land Cover)\tstate\n75\t\u0027Georgia\u0027\n52\t\u0027Florida\u0027\n39\t\u0027Alabama\u0027\n37\t\u0027Louisiana\u0027\n33\t\u0027Texas\u0027\n23\t\u0027Mississippi\u0027\n16\t\u0027California\u0027\n15\t\u0027Arizona\u0027\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094042_-612870021",
+      "id": "20171110-063717_362478632",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Cumulative Fire Danger",
+      "text": "%sql\nselect `Fire Danger`, `Land Cover` from active_fires where `Fire Danger` not like \u0027%N-A%\u0027\n",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/sql",
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "pieChart",
+              "height": 300.0,
+              "optionOpen": false
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql"
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "Fire Danger\tLand Cover\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Closed Shrublands\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Grasslands\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Savannas\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Open Shrublands\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Savannas\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Urban and Built-Up\u0027\n\u0027Low\u0027\t\u0027Urban and Built-Up\u0027\n\u0027Moderate\u0027\t\u0027Barren or Sparsely Vegetated\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Grasslands\u0027\n\u0027Low\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Savannas\u0027\n\u0027Low\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Urban and Built-Up\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Grasslands\u0027\n\u0027Moderate\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Low\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027High\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027High\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027High\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Woody Savannas\u0027\n\u0027High\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Low\u0027\t\u0027Woody Savannas\u0027\n\u0027High\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027High\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Savannas\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027High\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Savannas\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Grasslands\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Savannas\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027High\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Closed Shrublands\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Low\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027High\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Open Shrublands\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Open Shrublands\u0027\n\u0027High\u0027\t\u0027Woody Savannas\u0027\n\u0027High\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Savannas\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Open Shrublands\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Grasslands\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Open Shrublands\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Low\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Grasslands\u0027\n\u0027High\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027High\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027High\u0027\t\u0027Mixed Forests\u0027\n\u0027High\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027High\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Grasslands\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Savannas\u0027\n\u0027High\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027High\u0027\t\u0027Croplands\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Savannas\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Deciduous Broadleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Savannas\u0027\n\u0027Moderate\u0027\t\u0027Croplands\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027High\u0027\t\u0027Open Shrublands\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Open Shrublands\u0027\n\u0027High\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Grasslands\u0027\n\u0027Low\u0027\t\u0027Cropland/Natural Vegetation Mosaic\u0027\n\u0027Low\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Grasslands\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Open Shrublands\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Urban and Built-Up\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Moderate\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Savannas\u0027\n\u0027Low\u0027\t\u0027Grasslands\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Open Shrublands\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Low\u0027\t\u0027Woody Savannas\u0027\n\u0027Low\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Low\u0027\t\u0027Open Shrublands\u0027\n\u0027Low\u0027\t\u0027Grasslands\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Open Shrublands\u0027\n\u0027Moderate\u0027\t\u0027Evergreen Needleleaf Forest\u0027\n\u0027Moderate\u0027\t\u0027Mixed Forests\u0027\n\u0027Moderate\u0027\t\u0027Grasslands\u0027\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094043_-613254770",
+      "id": "20171110-064617_1839772878",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Initialize streams",
+      "text": "%sh\n# remove old streams\nssh nodeb pkill websocketd\nmaprcli stream delete -path /user/mapr/ml_input\nmaprcli stream delete -path /user/mapr/ml_output\n# restart streams\nmaprcli stream create -path /user/mapr/ml_input -produceperm p -consumeperm p -topicperm p -ttl 604800\nmaprcli stream topic create -path /user/mapr/ml_input -topic requester001\n# ttl 604800 is 1 week\nmaprcli stream create -path /user/mapr/ml_output -produceperm p -consumeperm p -topicperm p -ttl 604800\nmaprcli stream topic create -path /user/mapr/ml_output -topic kmeans001",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/sh",
+        "results": {},
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094102_-537459236",
+      "id": "20171110-072208_814620619",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Start the Spark Streaming notification task",
+      "text": "%sh /opt/mapr/spark/spark-2.1.0/bin/spark-submit --class com.sparkkafka.fire.SparkKafkaConsumerProducer --master local[2] ~/mapr-sparkml-streaming-fires-1.0-jar-with-dependencies.jar /user/mapr/data/save_fire_model  /user/mapr/ml_input:requester001 /user/mapr/ml_output:kmeans001 \n",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": false,
+        "tableHide": true,
+        "title": true,
+        "editorMode": "ace/mode/sh",
+        "results": {},
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094102_-537459236",
+      "id": "20171110-003135_94995843",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Start websocket interface for streams",
+      "text": "%sh\n# start a websocket stream interface for monitoring\nssh nodeb \"websocketd --port\u003d3433 --dir\u003d. --devconsole\" \u0026\n",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": false,
+        "tableHide": true,
+        "title": true,
+        "editorMode": "ace/mode/sh",
+        "results": {},
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094102_-537459236",
+      "id": "20171110-073509_233231405",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Identify which fire stations (centroids) should respond to active fires",
+      "text": "%pyspark \nimport websocket\nwebsocket.enableTrace(False)\nws \u003d create_connection(\"ws://10.1.1.15:3433/ml_input_stream.sh\")\nfor index, row in df.iterrows():\n    ws.send(row[\u0027Latitude(WGS84)\u0027]+\",\"+row[\u0027Longitude(WGS84)\u0027])\n    print(row[\u0027Latitude(WGS84)\u0027]+\",\"+row[\u0027Longitude(WGS84)\u0027])\n    ws.recv()\nws.close()",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "tableHide": false,
+        "title": true,
+        "editorMode": "ace/mode/python",
+        "results": {},
+        "editorHide": false,
+        "editorSetting": {
+          "language": "python"
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "pyspark is not responding"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094103_-537843985",
+      "id": "20171110-001243_1476311896",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md \n### Click [here](http://10.1.1.15:3433/ml_input_stream.sh) to watch the fire notifications stream (ML input).",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "tableHide": false,
+        "editorMode": "ace/mode/markdown",
+        "results": {},
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch3\u003eClick \u003ca href\u003d\"http://10.1.1.15:3433/ml_input_stream.sh\"\u003ehere\u003c/a\u003e to watch the fire notifications stream (ML input).\u003c/h3\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094103_-537843985",
+      "id": "20171110-002907_888967422",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md \n### Click [here](http://10.1.1.15:3433/ml_output_stream.sh) to watch the fire station alert stream (ML output).",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "tableHide": false,
+        "editorMode": "ace/mode/markdown",
+        "results": {},
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch3\u003eClick \u003ca href\u003d\"http://10.1.1.15:3433/ml_output_stream.sh\"\u003ehere\u003c/a\u003e to watch the fire station alert stream (ML output).\u003c/h3\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094104_-539767730",
+      "id": "20171110-045926_1106373116",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Backup training data and model files",
+      "text": "%sh\nmaprcli volume snapshot remove -volume mapr_home -snapshotname USFS_Experiment \nmaprcli volume snapshot create -cluster my.cluster.com -snapshotname USFS_Experiment -volume mapr_home\nls -la /mapr/my.cluster.com/user/mapr/.snapshot/",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/sh",
+        "results": {},
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094104_-539767730",
+      "id": "20171109-002734_2068244197",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "\n",
+      "dateUpdated": "Dec 20, 2017 7:28:14 PM",
+      "config": {
+        "enabled": true,
+        "tableHide": false,
+        "editorMode": "ace/mode/scala",
+        "results": {},
+        "editorHide": true,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1513798094104_-539767730",
+      "id": "20171024-060331_621482076",
+      "dateCreated": "Dec 20, 2017 7:28:14 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Forest Fire Prediction",
+  "id": "2D4CUWA84",
+  "angularObjects": {
+    "2CVRPQ5G3:shared_process": [],
+    "2CXG3CXEM:shared_process": [],
+    "2CWE4V2WA:shared_process": [],
+    "2CVYCC6H6:shared_process": [],
+    "2CV12SB71:shared_process": []
+  },
+  "config": {},
+  "info": {}
+}
