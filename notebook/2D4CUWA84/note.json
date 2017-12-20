@@ -1216,13 +1216,10 @@
   ],
   "name": "Forest Fire Prediction",
   "id": "2D4CUWA84",
-  "angularObjects": {
-    "2CVRPQ5G3:shared_process": [],
-    "2CXG3CXEM:shared_process": [],
-    "2CWE4V2WA:shared_process": [],
-    "2CVYCC6H6:shared_process": [],
-    "2CV12SB71:shared_process": []
+  "angularObjects": {},
+  "config": {
+    "looknfeel": "default",
+    "personalizedMode": "false"
   },
-  "config": {},
   "info": {}
 }
